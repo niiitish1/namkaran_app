@@ -37,10 +37,15 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   init() async {
     preferences = await SharedPreferences.getInstance();
-    var jsnString =
-        jsonDecode(preferences.getString('data').toString()) as List;
-    for (var item in jsnString) {
-      favList.add(Names.fromJson(item));
+    var data = preferences.getString('data');
+    if (data != null) {
+      var jsnString =
+          jsonDecode(preferences.getString('data').toString()) as List;
+      for (var item in jsnString) {
+        favList.add(Names.fromJson(item));
+      }
+    } else {
+      print('data is not there in sharedprefrence');
     }
   }
 

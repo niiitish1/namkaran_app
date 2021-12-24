@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:namkaran_app/models/category.dart';
 import 'package:namkaran_app/models/names.dart';
 import 'package:namkaran_app/screens/favourite.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   bool isMale;
@@ -23,13 +24,24 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final method = Same();
   int gender = 0;
   late String link;
+  late SharedPreferences preferences;
 
   @override
   void initState() {
     widget.isMale ? gender = 1 : gender = 2;
     super.initState();
+    init();
     callCasteCategoryApi();
     callNameListApi(3, gender);
+  }
+
+  init() async {
+    preferences = await SharedPreferences.getInstance();
+    var jsnString =
+        jsonDecode(preferences.getString('data').toString()) as List;
+    for (var item in jsnString) {
+      favList.add(Names.fromJson(item));
+    }
   }
 
   @override
@@ -159,8 +171,10 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 }
                 if (favListIndexNo == -1) {
                   favList.add(data);
+                  preferences.setString('data', jsonEncode(favList));
                 } else {
                   favList.removeAt(favListIndexNo);
+                  preferences.setString('data', jsonEncode(favList));
                 }
               });
             },
@@ -330,7 +344,7 @@ class CustomSearchDelegate extends SearchDelegate {
       }
     }
     if (searchQuery.isEmpty) {
-      return Center(child: Text('No data Found'));
+      return const Center(child: Text('No data Found'));
     } else {
       return ListView.builder(
         itemCount: searchQuery.length,

@@ -39,8 +39,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     preferences = await SharedPreferences.getInstance();
     var data = preferences.getString('data');
     if (data != null) {
-      var jsnString =
-          jsonDecode(preferences.getString('data').toString()) as List;
+      var jsnString = jsonDecode(data) as List;
       for (var item in jsnString) {
         favList.add(Names.fromJson(item));
       }

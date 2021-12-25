@@ -100,10 +100,8 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   callCasteCategoryApi() {
     casteCategory.clear();
-    http
-        .get(Uri.parse(
-            'http://mapi.trycatchtech.com/v1/naamkaran/category_list'))
-        .then((resp) {
+    //drop your caste category link here
+    http.get(Uri.parse('caste_category_link')).then((resp) {
       var jsonResp = jsonDecode(resp.body) as List;
       for (var itemDict in jsonResp) {
         casteCategory.add(CasteCategory.fromJson(itemDict));
@@ -115,8 +113,8 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   callNameListApi(int category, int gender) async {
     List<Names> temp = [];
-    link =
-        'https://mapi.trycatchtech.com/v1/naamkaran/post_list_by_cat_and_gender?category_id=$category&gender=$gender';
+    //drop your name link here
+    link = 'name_link';
 
     http.get(Uri.parse(link)).then((resp) {
       var jsonResp = jsonDecode(resp.body) as List;

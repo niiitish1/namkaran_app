@@ -32,20 +32,6 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     init();
     callCasteCategoryApi();
-    callNameListApi(3, gender);
-  }
-
-  init() async {
-    preferences = await SharedPreferences.getInstance();
-    var data = preferences.getString('data');
-    if (data != null) {
-      var jsnString = jsonDecode(data) as List;
-      for (var item in jsnString) {
-        favList.add(Names.fromJson(item));
-      }
-    } else {
-      print('data is not there in sharedprefrence');
-    }
   }
 
   @override
@@ -58,7 +44,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
             height: size.height,
             child: method.setbackGround(widget.isMale),
           ),
-          if (nameList.isEmpty) ...[
+          if (casteCategory.isEmpty) ...[
             const Center(
               child: CircularProgressIndicator(),
             )
@@ -88,10 +74,19 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   child: TabBarView(
                     children: List.generate(
                       casteCategory.length,
-                      (index) => ListView.builder(
-                        itemCount: nameList.length,
-                        itemBuilder: (context, index) => buildName(index),
-                      ),
+                      (index) {
+                        if (nameList.isEmpty) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: nameList.length,
+                          itemBuilder: (context, nameIndex) {
+                            return buildName(nameIndex);
+                          },
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -113,20 +108,26 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
       for (var itemDict in jsonResp) {
         casteCategory.add(CasteCategory.fromJson(itemDict));
       }
+      setState(() {});
+      callNameListApi(3, gender);
     });
   }
 
   callNameListApi(int category, int gender) async {
-    nameList.clear();
+    List<Names> temp = [];
     link =
         'https://mapi.trycatchtech.com/v1/naamkaran/post_list_by_cat_and_gender?category_id=$category&gender=$gender';
 
     http.get(Uri.parse(link)).then((resp) {
       var jsonResp = jsonDecode(resp.body) as List;
       for (var item in jsonResp) {
-        nameList.add(Names.fromJson(item));
+        temp.add(Names.fromJson(item));
       }
-      setState(() {});
+      setState(() {
+        nameList.clear();
+        nameList.addAll(temp);
+        temp.clear();
+      });
     });
   }
 
@@ -222,6 +223,19 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
+  init() async {
+    preferences = await SharedPreferences.getInstance();
+    var data = preferences.getString('data');
+    if (data != null) {
+      var jsnString = jsonDecode(data) as List;
+      for (var item in jsnString) {
+        favList.add(Names.fromJson(item));
+      }
+    } else {
+      print('data is not there in sharedprefrence');
+    }
+  }
+
   AppBar buildAppbar() {
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -252,8 +266,10 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => FavouriteScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const FavouriteScreen()));
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -278,7 +294,8 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         )
       ],
       bottom: TabBar(
-        labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        onTap: (index) {},
         indicator: UnderlineTabIndicator(
           borderSide: BorderSide(
               width: 5.0,
@@ -289,8 +306,11 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         tabs: List.generate(
             casteCategory.length,
-            (index) => Text(
-                  '${casteCategory[index].catName}',
+            (index) => GestureDetector(
+                  onTap: () {},
+                  child: Text(
+                    '${casteCategory[index].catName}',
+                  ),
                 )),
       ),
     );

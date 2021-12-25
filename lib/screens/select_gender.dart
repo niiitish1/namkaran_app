@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:namkaran_app/const/same_method.dart';
+import 'package:namkaran_app/screens/favourite.dart';
 import 'package:namkaran_app/screens/home_name.dart';
 
 class SelectGender extends StatelessWidget {
@@ -43,7 +44,14 @@ class SelectGender extends StatelessWidget {
                   ),
                 ],
               ),
-              method.myImage(path: method.images[3], type: BoxFit.none)
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const FavouriteScreen()));
+                },
+                child:
+                    method.myImage(path: method.images[3], type: BoxFit.none),
+              ),
             ],
           )
         ],

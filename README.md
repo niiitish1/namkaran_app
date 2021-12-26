@@ -1,16 +1,10 @@
-# namkaran_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# NamKaran App (Andorid & IOS)
+Baby's best names finding very easy!
+More than 1000 baby names.
+This free baby name library includes baby name's Meaning, Religion, Numerology, Syllables, details!
+Its user centric design will let you find best name for your baby effortlessly.
+## Features
+- [Search]
+- [Add to Favourite]
+# Preview
+<img src="https://user-images.githubusercontent.com/71102495/147411577-9a2e397d-e244-4c6c-bcb5-477d72f00f4d.png" alt="a" width="200"/>
